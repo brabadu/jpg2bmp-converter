@@ -1,0 +1,8 @@
+jpg2bmp converter is my course work at the university.
+
+It's written in python, using gtk.
+
+Program must do these things:
+1. Open *.jpg and *.bmp images
+2. Save to *.bmp image format
+3. Put some filters on image (what particular filters will add later)
