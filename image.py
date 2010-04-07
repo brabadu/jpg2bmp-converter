@@ -1,0 +1,39 @@
+#!/usr/bin/python
+# -*- coding:UTF-8 -*-
+
+import sys
+import re
+import os
+
+class InvalidImage(Exception):
+    pass
+
+class UnknownImageFormat(Exception):
+    pass
+
+class Image ():
+    
+    def __init__(self, filepath = None):
+        self.load_modules()
+        if filepath:
+            self.open(filepath)
+    
+    def open(self, filepath):
+        """Returns image object with a class of file type
+        """
+        f = filepath.strip()
+        filetype = filepath.split('.')[-1]
+        try:
+            self.img = self.modules[filetype].open_file(f)
+        except KeyError:
+            raise UnknownImageFormat
+        
+    
+    def load_modules(self):
+        """Dynamic load of modules, that handle image file types"""
+        files = os.listdir(os.curdir)
+        pattern = re.compile(r'^format_(\w+)\.py')
+        format_files = filter(lambda x: x is not None, map(pattern.match, files))
+        modules_list = [[f.groups()[0], __import__(f.group()[:-3])] for f in format_files]
+        self.modules = dict(modules_list)
+
