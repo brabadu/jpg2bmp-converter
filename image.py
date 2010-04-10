@@ -5,11 +5,7 @@ import sys
 import re
 import os
 
-class InvalidImage(Exception):
-    pass
-
-class UnknownImageFormat(Exception):
-    pass
+from utils import InvalidImage, UnknownImageFormat
 
 class Image ():
     
