@@ -9,20 +9,18 @@ from utils import InvalidImage, UnknownImageFormat
 
 class Image ():
     
-    def __init__(self, filepath = None):
+    def __init__(self):
         self.load_modules()
-        if filepath:
-            self.open(filepath)
     
     def open(self, filepath):
-        """Returns image object with a class of file type
-        """
+        """Returns image object with a class of file type"""
         f = filepath.strip()
         filetype = filepath.split('.')[-1]
         try:
-            self.img = self.modules[filetype].open_file(f)
+            return self.modules[filetype].open_file(f)
         except KeyError:
             raise UnknownImageFormat
+        
         
     
     def load_modules(self):

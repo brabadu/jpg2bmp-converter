@@ -29,11 +29,29 @@ def open_file(filepath):
                     ]
     for field in field_name:
         metadata[field[0]] = utils.filehex2dec(f.read(field[1]))
-    
+        
     for k,v in metadata.iteritems():
         print k, ':', v
+    # Here reading of palette must be...
     
-    return True
+    # Reading bitmap
+    f.seek(metadata['bitmap_adress'])
+    
+    line_size = metadata['width'] * 3 + metadata['width'] % 4
+    print "Line size = ",line_size
+    
+    line = f.read(line_size)
+    bitmap = []
+    while (line):
+        bitmap_line = []
+        for i in xrange(metadata['width']):
+            bitmap_line.append( [ord(elem) for elem in list(line)[i*3:i*3+3]] )
+        bitmap.append(bitmap_line)
+#        print [ord(elem) for elem in list(line)]
+#        print bitmap_line
+        line = f.read(line_size)
+    
+    return metadata, bitmap
 
 def save_file(filepath, content):
     print "BMP",filepath
