@@ -3,57 +3,78 @@
 
 import utils
 
+header_fields = [['file_size', 4], 
+                ['reserved', 4], 
+                ['bitmap_adress', 4], 
+                ['header_length', 4],
+                ['width', 4], 
+                ['height', 4],
+                ['color_plane', 2],
+                ['bits_on_pixel', 2],
+                ['compression', 4],
+                ['bitmap_length', 4],
+                ['hres', 4],
+                ['vres', 4],
+                ['color_number', 4],
+                ['base_color_number', 4],
+                ]
+
+bits_to_maxcolors = {  1 : 2, # one bit on color - means there's 2 colors on image
+                4 : 16,
+                8 : 256,
+             }
+
 def open_file(filepath):
     print "Opening \"%s\" as BMP" % filepath
     f = open(filepath, 'rb')
     # Checking header
-    header = f.read(2)
-    if header != 'BM':
+    signature = f.read(2)
+    if signature != 'BM':
         raise InvalidImage()
-        
-    metadata = {}
-    field_name = [['file_size', 4], 
-                    ['reserved', 4], 
-                    ['bitmap_adress', 4], 
-                    ['header_length', 4],
-                    ['width', 4], 
-                    ['height', 4],
-                    ['color_plane', 2],
-                    ['bit_on_pixel', 2],
-                    ['compression', 4],
-                    ['bitmap_length', 4],
-                    ['hres', 4],
-                    ['vres', 4],
-                    ['color_number', 4],
-                    ['base_color_number', 4],
-                    ]
-    for field in field_name:
-        metadata[field[0]] = utils.filehex2dec(f.read(field[1]))
-        
-    for k,v in metadata.iteritems():
+
+    # Header
+    header = {}
+    for field in header_fields:
+        header[field[0]] = utils.filehex2dec(f.read(field[1]))
+    for k,v in header.iteritems():
         print k, ':', v
-    # Here reading of palette must be...
+    print 
+
+    # Palette
+    has_palette = header['bits_on_pixel'] <= 8 and True or False
+    print "File has palette:", has_palette
+    if has_palette:
+        palette = []
+        for i in xrange(bits_to_maxcolors[header['bits_on_pixel']]):
+            bgra = f.read(4)
+            b, g, r = [ord(elem) << 8 for elem in list(bgra)[:-1]]
+            palette.append([r, g, b])
+        print "\n".join(["%7d %7d %7d" %(color[0],color[1],color[2]) for color in palette])
+            
     
-    # Reading bitmap
-    f.seek(metadata['bitmap_adress'])
+    # Bitmap
+    f.seek(header['bitmap_adress'])
     
-    line_size = metadata['width'] * 3 + metadata['width'] % 4
+    line_size = header['width'] * 3 + header['width'] % 4
     print "Line size = ",line_size
     
     line = f.read(line_size)
     bitmap = []
     while (line):
         bitmap_line = []
-        for i in xrange(metadata['width']):
-            bitmap_line.append( [ord(elem) for elem in list(line)[i*3:i*3+3]] )
+        for i in xrange(header['width']):
+            bgr = [ord(elem) << 8 for elem in list(line)[i*3:i*3+3]] 
+            bgr.reverse()
+            bitmap_line.append(bgr)
         bitmap.append(bitmap_line)
-#        print [ord(elem) for elem in list(line)]
-#        print bitmap_line
         line = f.read(line_size)
-    
-    return metadata, bitmap
+    bitmap.reverse()
+    return header, bitmap
 
 def save_file(filepath, content):
     print "BMP",filepath
     return True
-    
+
+# Test
+if __name__=='__main__':
+    open_file('img/test2.bmp')
