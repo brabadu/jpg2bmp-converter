@@ -49,7 +49,7 @@ def open_file(filepath):
             bgra = f.read(4)
             b, g, r = [ord(elem) << 8 for elem in list(bgra)[:-1]]
             palette.append([r, g, b])
-        print "\n".join(["%7d %7d %7d" %(color[0],color[1],color[2]) for color in palette])
+        print "\n".join(["%7d %7d %7d" % tuple(color) for color in palette])
             
     
     # Bitmap
