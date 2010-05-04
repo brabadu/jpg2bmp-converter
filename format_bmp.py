@@ -50,21 +50,48 @@ def open_file(filepath):
     # Bitmap
     f.seek(header['bitmap_adress'])
     
-    line_size = header['width'] * 3 + header['width'] % 4
+    line_size = get_bitmap_line_byte_size(header['width'], header['bits_on_pixel'])
     print "Line size = ",line_size
     
     line = f.read(line_size)
     bitmap = []
     while (line):
-        bitmap_line = []
-        for i in xrange(header['width']):
-            bgr = [ord(elem) << 8 for elem in list(line)[i*3:i*3+3]] 
-            bgr.reverse()
-            bitmap_line.append(bgr)
+        bitmap_line = get_bitmap_line(line, header['width'], header['bits_on_pixel'], palette)
         bitmap.append(bitmap_line)
         line = f.read(line_size)
     bitmap.reverse()
     return header, bitmap
+
+def get_bitmap_line_byte_size(width, bpp):
+    useful_bits = width * bpp
+    mod = useful_bits % 32
+    if mod:
+        useful_bits += 32 - mod
+    return useful_bits / 8
+
+def get_bitmap_line(line, width, bpp, palette):
+    bitmap_line = []
+    if bpp == 1:
+        line = list(line)
+        line.reverse()
+        integer = utils.filehex2dec(line)
+        integer >>= get_bitmap_line_byte_size(width, bpp)*8 - width * bpp
+        for i in xrange(width):
+            pixel = palette[utils.testBit(integer, i)]
+            bitmap_line.append(pixel)
+    elif bpp == 24:
+        for i in xrange(width):
+            bgr = [ord(elem) << 8 for elem in list(line)[i*3:i*3+3]] 
+            bgr.reverse()
+            bitmap_line.append(bgr)
+    elif bpp == 32:
+        for i in xrange(width):
+            abgr = [ord(elem) << 8 for elem in list(line)[i*4:i*4+4]] 
+            abgr.reverse()
+            bitmap_line.append(abgr[:-1])
+    else:
+        Exception("Wrong bbp")
+    return bitmap_line
 
 def save_file(filepath, content):
     print "BMP",filepath
@@ -72,4 +99,5 @@ def save_file(filepath, content):
 
 # Test
 if __name__=='__main__':
-    open_file('img/test2.bmp')
+    h, b = open_file('img/test2.bmp')
+    print b
