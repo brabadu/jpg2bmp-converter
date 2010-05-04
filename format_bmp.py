@@ -19,11 +19,6 @@ header_fields = [['file_size', 4],
                 ['base_color_number', 4],
                 ]
 
-bits_to_maxcolors = {  1 : 2, # one bit on color - means there's 2 colors on image
-                4 : 16,
-                8 : 256,
-             }
-
 def open_file(filepath):
     print "Opening \"%s\" as BMP" % filepath
     f = open(filepath, 'rb')
@@ -43,9 +38,9 @@ def open_file(filepath):
     # Palette
     has_palette = header['bits_on_pixel'] <= 8 and True or False
     print "File has palette:", has_palette
+    palette = []
     if has_palette:
-        palette = []
-        for i in xrange(bits_to_maxcolors[header['bits_on_pixel']]):
+        for i in xrange(2**header['bits_on_pixel']):
             bgra = f.read(4)
             b, g, r = [ord(elem) << 8 for elem in list(bgra)[:-1]]
             palette.append([r, g, b])
