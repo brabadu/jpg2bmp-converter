@@ -17,6 +17,8 @@ class MainWindow(gtk.Builder):
         self.MainWindow.show_all()
         self.x = 100
 
+        self.image = None
+
     def __getattr__(self, attr):
         # удобней писать self.window1, чем self.get_object('window1')
         obj = self.get_object(attr)
@@ -33,11 +35,11 @@ class MainWindow(gtk.Builder):
     def save_file(self, widget):
         # По поводу кода ниже - рекомендую познакомится со ссылкой:
         # doc.crossplatform.ru/python/pygtk/2.4/ch-DrawingArea.html#sec-GraphicsContext
-        
+
         drawable = self.drawingarea.window
         colormap = self.drawingarea.get_colormap()
         assert drawable
-       
+
         this_color = gtk.gdk.Color(red=0x0, green=0x0, blue=0x0)
         this_foreground = colormap.alloc_color(this_color)
         gc = drawable.new_gc( foreground=this_foreground,
@@ -60,20 +62,20 @@ class MainWindow(gtk.Builder):
             g = random.randint(100,65535)
             b = random.randint(100,65535)
             color = colormap.alloc_color(r, g, b)
-            gc.set_foreground(color) 
-        
+            gc.set_foreground(color)
+
         return True
-        
+
     def open_file(self, widget):
         print "OPEN"
-        
-        drawable = self.drawingarea.window
-        colormap = self.drawingarea.get_colormap()
-        assert drawable
-        
+
+        self.drawable = self.drawingarea.window
+        self.colormap = self.drawingarea.get_colormap()
+        assert self.drawable
+
         this_color = gtk.gdk.Color(red=0xff, green=0xff, blue=0xff)
-        this_foreground = colormap.alloc_color(this_color)
-        gc = drawable.new_gc( foreground=this_foreground,
+        this_foreground = self.colormap.alloc_color(this_color)
+        self.gc = self.drawable.new_gc( foreground=this_foreground,
                               background=this_foreground,
                               line_width=2,
                               line_style=gtk.gdk.LINE_SOLID,
@@ -81,26 +83,36 @@ class MainWindow(gtk.Builder):
                               cap_style=gtk.gdk.CAP_BUTT,
                               fill=gtk.gdk.SOLID,
                               function=gtk.gdk.COPY )
-        
-        img = image.Image()
+
+        self.image = image.Image()
         filename = ''
         try:
             filename = sys.argv[1]
         except:
             filename = 'img/test_me24.bmp'
-        
-        metadata, bitmap = img.open(filename)
-        for i in xrange(metadata['height']):
-            for j in xrange(metadata['width']):
-                r, g, b = bitmap[i][j]
-                col = colormap.alloc_color(r, g, b)
-                gc.set_foreground(col)
-                drawable.draw_point(gc, j, i)
-        
+
+        self.image.open(filename)
+        self.draw_image()
         return True
-        
+
+    def expose_event(self, area, event):
+        self.draw_image()
+        return True
+
+    def draw_image(self):
+        if self.image is None:
+            return
+
+        img = self.image
+        for y in xrange(img.height):
+            for x in xrange(img.width):
+                r, g, b = img.bitmap[y][x]
+                col = self.colormap.alloc_color(r, g, b)
+                self.gc.set_foreground(col)
+                self.drawable.draw_point(self.gc, x, y)
 
 
 if __name__ == '__main__':
     mainWindow = MainWindow()
     gtk.main()
+
