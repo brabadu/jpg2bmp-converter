@@ -4,6 +4,7 @@
 import gtk
 import os
 import random
+import sys
 
 import image
 
@@ -82,20 +83,20 @@ class MainWindow(gtk.Builder):
                               function=gtk.gdk.COPY )
         
         img = image.Image()
-        metadata, bitmap = img.open('img/test_me24.bmp')
-#        print bitmap
+        filename = ''
+        try:
+            filename = sys.argv[1]
+        except:
+            filename = 'img/test_me24.bmp'
+        
+        metadata, bitmap = img.open(filename)
         for i in xrange(metadata['height']):
             for j in xrange(metadata['width']):
-        
-                print '[%d,%d,%d] ' % (bitmap[i][j][0], bitmap[i][j][1], bitmap[i][j][2]),
-                r = bitmap[i][j][2] * 256
-                g = bitmap[i][j][1] * 256
-                b = bitmap[i][j][0] * 256
+                r, g, b = bitmap[i][j]
                 col = colormap.alloc_color(r, g, b)
                 gc.set_foreground(col)
-                drawable.draw_point(gc, j, metadata['height'] - i)
+                drawable.draw_point(gc, j, i)
         
-                
         return True
         
 
