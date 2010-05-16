@@ -8,21 +8,26 @@ import os
 from utils import InvalidImage, UnknownImageFormat
 
 class Image ():
-    
+
     def __init__(self):
+        self.bitmap = None
+        self.height = 0
+        self.width = 0
         self.load_modules()
-    
+
     def open(self, filepath):
         """Returns image object with a class of file type"""
         f = filepath.strip()
         filetype = filepath.split('.')[-1]
+
         try:
-            return self.modules[filetype].open_file(f)
+            metadata, self.bitmap = self.modules[filetype].open_file(f)
         except KeyError:
             raise UnknownImageFormat
-        
-        
-    
+
+        self.height = metadata['height']
+        self.width = metadata['width']
+
     def load_modules(self):
         """Dynamic load of modules, that handle image file types"""
         files = os.listdir(os.curdir)
