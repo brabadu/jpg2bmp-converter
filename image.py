@@ -4,6 +4,7 @@
 import sys
 import re
 import os
+import random
 
 from utils import InvalidImage, UnknownImageFormat
 
@@ -36,7 +37,7 @@ class Image ():
         modules_list = [[f.groups()[0], __import__(f.group()[:-3])] for f in format_files]
         self.modules = dict(modules_list)
 
-    def noise(self, component, strength):
+    def noise(self, component, strength=1000):
         """Noise R,G or B component of image"""
         component = str(component).lower()
         all_components = {
@@ -48,4 +49,12 @@ class Image ():
             c = all_components[component]
         except KeyError:
             print 'Component must be r,g or b'
+
+        for line in self.bitmap:
+            for pixel in line:
+                print pixel[c]
+                pixel[c] = abs(pixel[c] + random.randint(-strength, strength)) % 65536
+
+    def negative(self):
+        self.bitmap = [[[65536 - component for component in pixel] for pixel in line] for line in self.bitmap]
 
