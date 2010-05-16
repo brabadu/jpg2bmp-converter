@@ -31,3 +31,16 @@ class Image ():
         modules_list = [[f.groups()[0], __import__(f.group()[:-3])] for f in format_files]
         self.modules = dict(modules_list)
 
+    def noise(self, component, strength):
+        """Noise R,G or B component of image"""
+        component = str(component).lower()
+        all_components = {
+            'r' : 0,
+            'g' : 1,
+            'b' : 2,
+        }
+        try:
+            c = all_components[component]
+        except KeyError:
+            print 'Component must be r,g or b'
+

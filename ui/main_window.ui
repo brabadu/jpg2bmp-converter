@@ -43,6 +43,48 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkSeparatorToolItem" id="separator">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="noise_r">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Noise R</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="noise_g">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Noise G</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="noise_b">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Noise B</property>
+                <property name="use_underline">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="right_attach">3</property>
@@ -59,6 +101,7 @@
             <child>
               <object class="GtkDrawingArea" id="drawingarea">
                 <property name="visible">True</property>
+                <signal name="expose_event" handler="expose_event"/>
               </object>
             </child>
           </object>
