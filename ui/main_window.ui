@@ -53,12 +53,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="noise_r">
+              <object class="GtkMenuToolButton" id="noise_r">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Noise R</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">noise_r_image</property>
-                <signal name="clicked" handler="noise_r_clicked_cb"/>
+                <property name="menu">noise_r_menu</property>
+                <signal name="clicked" handler="add_noise_r_cb"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -66,12 +67,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="noise_g">
+              <object class="GtkMenuToolButton" id="noise_g">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Noise G</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">noise_g_image</property>
-                <signal name="clicked" handler="noise_g_clicked_cb"/>
+                <property name="menu">noise_g_menu</property>
+                <signal name="clicked" handler="add_noise_g_cb"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -79,12 +81,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="noise_b">
+              <object class="GtkMenuToolButton" id="noise_b">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">Noise B</property>
                 <property name="use_underline">True</property>
                 <property name="icon_widget">noise_b_image</property>
-                <signal name="clicked" handler="noise_b_clicked_cb"/>
+                <property name="menu">noise_b_menu</property>
+                <signal name="clicked" handler="add_noise_b_cb"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -142,9 +145,70 @@
       </object>
     </child>
   </object>
+  <object class="GtkImage" id="negative_image">
+    <property name="visible">True</property>
+    <property name="pixbuf">negative.png</property>
+  </object>
+  <object class="GtkMenu" id="noise_r_menu">
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkMenuItem" id="add_noise_r">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">+</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="add_noise_r_cb"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="low_noise_r">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">-</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="low_noise_r_cb"/>
+      </object>
+    </child>
+  </object>
   <object class="GtkImage" id="noise_r_image">
     <property name="visible">True</property>
     <property name="pixbuf">red_dot.png</property>
+  </object>
+  <object class="GtkMenu" id="noise_g_menu">
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkMenuItem" id="add_noise_g">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">+</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="add_noise_g_cb"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="low_noise_g">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">-</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="low_noise_g_cb"/>
+      </object>
+    </child>
+  </object>
+  <object class="GtkMenu" id="noise_b_menu">
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkMenuItem" id="add_noise_b">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">+</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="add_noise_b_cb"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="low_noise_b">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">-</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="low_noise_b_cb"/>
+      </object>
+    </child>
   </object>
   <object class="GtkImage" id="noise_g_image">
     <property name="visible">True</property>
@@ -153,9 +217,5 @@
   <object class="GtkImage" id="noise_b_image">
     <property name="visible">True</property>
     <property name="pixbuf">blue_dot.png</property>
-  </object>
-  <object class="GtkImage" id="negative_image">
-    <property name="visible">True</property>
-    <property name="pixbuf">negative.png</property>
   </object>
 </interface>

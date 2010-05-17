@@ -111,18 +111,33 @@ class MainWindow(gtk.Builder):
                 self.gc.set_foreground(col)
                 self.drawable.draw_point(self.gc, x, y)
 
-    def noise_r_clicked_cb(self, widget):
+    def add_noise_r_cb(self, widget):
         self.image.noise('r')
         self.draw_image()
         return True
 
-    def noise_g_clicked_cb(self, widget):
+    def low_noise_r_cb(self, widget):
+        self.image.noise('r', strength=-1000)
+        self.draw_image()
+        return True
+
+    def add_noise_g_cb(self, widget):
         self.image.noise('g')
         self.draw_image()
         return True
 
-    def noise_b_clicked_cb(self, widget):
+    def low_noise_g_cb(self, widget):
+        self.image.noise('g', strength=-1000)
+        self.draw_image()
+        return True
+
+    def add_noise_b_cb(self, widget):
         self.image.noise('b')
+        self.draw_image()
+        return True
+
+    def low_noise_b_cb(self, widget):
+        self.image.noise('b', strength=-1000)
         self.draw_image()
         return True
 
