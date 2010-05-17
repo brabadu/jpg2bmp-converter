@@ -3,9 +3,9 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="MainWindow">
-    <property name="title" translatable="yes">&#x41F;&#x440;&#x438;&#x432;&#x456;&#x442;, &#x441;&#x432;&#x456;&#x442;!</property>
+    <property name="title" translatable="yes">jpg2bmp converter</property>
     <property name="window_position">center</property>
-    <property name="default_width">500</property>
+    <property name="default_width">600</property>
     <property name="default_height">500</property>
     <signal name="destroy" handler="quit"/>
     <child>
@@ -116,6 +116,19 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkToolButton" id="put_filter">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Filter</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">filter_image</property>
+                <signal name="clicked" handler="put_filter_clicked_cb"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="right_attach">3</property>
@@ -217,5 +230,9 @@
   <object class="GtkImage" id="noise_b_image">
     <property name="visible">True</property>
     <property name="pixbuf">blue_dot.png</property>
+  </object>
+  <object class="GtkImage" id="filter_image">
+    <property name="visible">True</property>
+    <property name="pixbuf">filter.png</property>
   </object>
 </interface>

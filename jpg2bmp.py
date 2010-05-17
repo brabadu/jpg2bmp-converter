@@ -146,6 +146,11 @@ class MainWindow(gtk.Builder):
         self.draw_image()
         return True
 
+    def put_filter_clicked_cb(self, widget):
+        self.image.put_filter()
+        self.draw_image()
+        return True
+
 if __name__ == '__main__':
     mainWindow = MainWindow()
     gtk.main()
