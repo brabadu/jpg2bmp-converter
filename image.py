@@ -52,8 +52,10 @@ class Image ():
 
         for line in self.bitmap:
             for pixel in line:
-                print pixel[c]
-                pixel[c] = abs(pixel[c] + random.randint(-strength, strength)) % 65536
+                np = (pixel[c] + strength) % 65536
+                print pixel, " : ",
+                pixel[c] = np > 0 and np or 0
+                print pixel
 
     def negative(self):
         self.bitmap = [[[65536 - component for component in pixel] for pixel in line] for line in self.bitmap]
