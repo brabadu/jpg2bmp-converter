@@ -19,6 +19,22 @@ class MainWindow(gtk.Builder):
 
         self.image = None
 
+        self.drawable = self.drawingarea.window
+        self.colormap = self.drawingarea.get_colormap()
+        assert self.drawable
+
+        this_color = gtk.gdk.Color(red=0xff, green=0xff, blue=0xff)
+        this_foreground = self.colormap.alloc_color(this_color)
+        self.gc = self.drawable.new_gc( foreground=this_foreground,
+                              background=this_foreground,
+                              line_width=2,
+                              line_style=gtk.gdk.LINE_SOLID,
+                              join_style=gtk.gdk.JOIN_MITER,
+                              cap_style=gtk.gdk.CAP_BUTT,
+                              fill=gtk.gdk.SOLID,
+                              function=gtk.gdk.COPY )
+
+
     def __getattr__(self, attr):
         # удобней писать self.window1, чем self.get_object('window1')
         obj = self.get_object(attr)
@@ -68,21 +84,6 @@ class MainWindow(gtk.Builder):
 
     def open_file(self, widget):
         print "OPEN"
-
-        self.drawable = self.drawingarea.window
-        self.colormap = self.drawingarea.get_colormap()
-        assert self.drawable
-
-        this_color = gtk.gdk.Color(red=0xff, green=0xff, blue=0xff)
-        this_foreground = self.colormap.alloc_color(this_color)
-        self.gc = self.drawable.new_gc( foreground=this_foreground,
-                              background=this_foreground,
-                              line_width=2,
-                              line_style=gtk.gdk.LINE_SOLID,
-                              join_style=gtk.gdk.JOIN_MITER,
-                              cap_style=gtk.gdk.CAP_BUTT,
-                              fill=gtk.gdk.SOLID,
-                              function=gtk.gdk.COPY )
 
         self.image = image.Image()
         filename = ''
