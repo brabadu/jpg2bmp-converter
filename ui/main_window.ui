@@ -129,6 +129,19 @@
                 <property name="homogeneous">True</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkToolButton" id="hsl">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">HSL</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">hsl_image</property>
+                <signal name="clicked" handler="hsl_clicked_cb"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="right_attach">3</property>
@@ -235,36 +248,8 @@
     <property name="visible">True</property>
     <property name="pixbuf">filter.png</property>
   </object>
-  <object class="GtkFileChooserDialog" id="filedialog">
-    <property name="border_width">5</property>
-    <property name="window_position">center-on-parent</property>
-    <property name="type_hint">normal</property>
-    <property name="has_separator">False</property>
-    <child internal-child="vbox">
-      <object class="GtkVBox" id="dialog-vbox1">
-        <property name="visible">True</property>
-        <property name="spacing">2</property>
-        <child>
-          <placeholder/>
-        </child>
-        <child internal-child="action_area">
-          <object class="GtkHButtonBox" id="dialog-action_area1">
-            <property name="visible">True</property>
-            <property name="layout_style">end</property>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="pack_type">end</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
+  <object class="GtkImage" id="hsl_image">
+    <property name="visible">True</property>
+    <property name="pixbuf">HLS.png</property>
   </object>
 </interface>
