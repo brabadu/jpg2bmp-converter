@@ -100,18 +100,6 @@ class MainWindow(gtk.Builder):
         self.draw_image()
         return True
 
-    def draw_image(self):
-        if self.image is None:
-            return
-
-        img = self.image
-        for y in xrange(img.height):
-            for x in xrange(img.width):
-                r, g, b = img.bitmap[y][x]
-                col = self.colormap.alloc_color(r, g, b)
-                self.gc.set_foreground(col)
-                self.drawable.draw_point(self.gc, x, y)
-
     def add_noise_r_cb(self, widget):
         self.image.noise('r')
         self.draw_image()
@@ -151,6 +139,18 @@ class MainWindow(gtk.Builder):
         self.image.put_filter()
         self.draw_image()
         return True
+
+    def draw_image(self):
+        if self.image is None:
+            return
+
+        img = self.image
+        for y in xrange(img.height):
+            for x in xrange(img.width):
+                r, g, b = img.bitmap[y][x]
+                col = self.colormap.alloc_color(r, g, b)
+                self.gc.set_foreground(col)
+                self.drawable.draw_point(self.gc, x, y)
 
 if __name__ == '__main__':
     mainWindow = MainWindow()

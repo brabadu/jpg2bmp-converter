@@ -235,7 +235,7 @@
     <property name="visible">True</property>
     <property name="pixbuf">filter.png</property>
   </object>
-  <object class="GtkFileChooserDialog" id="filechooserdialog">
+  <object class="GtkFileChooserDialog" id="filedialog">
     <property name="border_width">5</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">normal</property>
