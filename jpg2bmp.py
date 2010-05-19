@@ -150,8 +150,23 @@ class MainWindow(gtk.Builder):
         self.draw_image()
         return True
 
-    def put_filter_clicked_cb(self, widget):
-        self.image.put_filter()
+    def put_filter8_clicked_cb(self, widget):
+        f = [
+            [1, 2, 1],
+            [2, 13, 2],
+            [2, 2, 1]
+        ]
+        self.image.put_filter(f)
+        self.draw_image()
+        return True
+
+    def put_filter11_clicked_cb(self, widget):
+        f = [
+            [2, 7, 1],
+            [2, 7, 2],
+            [7, 3, 1]
+        ]
+        self.image.put_filter(f)
         self.draw_image()
         return True
 

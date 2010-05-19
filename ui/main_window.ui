@@ -5,7 +5,7 @@
   <object class="GtkWindow" id="MainWindow">
     <property name="title" translatable="yes">jpg2bmp converter</property>
     <property name="window_position">center</property>
-    <property name="default_width">600</property>
+    <property name="default_width">650</property>
     <property name="default_height">500</property>
     <signal name="destroy" handler="quit"/>
     <child>
@@ -95,6 +95,20 @@
               </packing>
             </child>
             <child>
+              <object class="GtkMenuToolButton" id="noise_l">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Noise L</property>
+                <property name="use_underline">True</property>
+                <property name="icon_widget">noise_l_image</property>
+                <property name="menu">noise_l_menu</property>
+                <signal name="clicked" handler="add_noise_l_cb"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkSeparatorToolItem" id="separator2">
                 <property name="visible">True</property>
               </object>
@@ -117,12 +131,12 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="put_filter">
+              <object class="GtkToolButton" id="put_filter8">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Filter</property>
+                <property name="label" translatable="yes">Filter 1</property>
                 <property name="use_underline">True</property>
-                <property name="icon_widget">filter_image</property>
-                <signal name="clicked" handler="put_filter_clicked_cb"/>
+                <property name="icon_widget">filter1_image</property>
+                <signal name="clicked" handler="put_filter8_clicked_cb"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -130,12 +144,12 @@
               </packing>
             </child>
             <child>
-              <object class="GtkToolButton" id="hsl">
+              <object class="GtkToolButton" id="put_filter11">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">HSL</property>
+                <property name="label" translatable="yes">Filter 2</property>
                 <property name="use_underline">True</property>
-                <property name="icon_widget">hsl_image</property>
-                <signal name="clicked" handler="hsl_clicked_cb"/>
+                <property name="icon_widget">filter2_image</property>
+                <signal name="clicked" handler="put_filter11_clicked_cb"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -244,12 +258,35 @@
     <property name="visible">True</property>
     <property name="pixbuf">blue_dot.png</property>
   </object>
-  <object class="GtkImage" id="filter_image">
+  <object class="GtkImage" id="filter1_image">
     <property name="visible">True</property>
     <property name="pixbuf">filter.png</property>
   </object>
-  <object class="GtkImage" id="hsl_image">
+  <object class="GtkMenu" id="noise_l_menu">
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkMenuItem" id="add_noise_l">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">+</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="add_noise_l_cb"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="low_noise_l">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">-</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="low_noise_l_cb"/>
+      </object>
+    </child>
+  </object>
+  <object class="GtkImage" id="noise_l_image">
     <property name="visible">True</property>
     <property name="pixbuf">HLS.png</property>
+  </object>
+  <object class="GtkImage" id="filter2_image">
+    <property name="visible">True</property>
+    <property name="pixbuf">filter2.png</property>
   </object>
 </interface>
