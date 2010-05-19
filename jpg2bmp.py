@@ -17,7 +17,7 @@ class MainWindow(gtk.Builder):
         self.MainWindow.show_all()
         self.x = 100
 
-        self.image = None
+        self.image = image.Image()
 
         self.drawable = self.drawingarea.window
         self.colormap = self.drawingarea.get_colormap()
@@ -49,55 +49,118 @@ class MainWindow(gtk.Builder):
 
 
     def save_file(self, widget):
-        # По поводу кода ниже - рекомендую познакомится со ссылкой:
-        # doc.crossplatform.ru/python/pygtk/2.4/ch-DrawingArea.html#sec-GraphicsContext
+        print "SAVE"
+        dialog = gtk.FileChooserDialog("Save",
+                               None,
+                               gtk.FILE_CHOOSER_ACTION_SAVE,
+                               (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.set_default_response(gtk.RESPONSE_OK)
 
-        drawable = self.drawingarea.window
-        colormap = self.drawingarea.get_colormap()
-        assert drawable
+        filter = gtk.FileFilter()
+        filter.set_name("Images")
+        filter.add_mime_type("image/bmp")
+        filter.add_pattern("*.bmp")
+        dialog.add_filter(filter)
 
-        this_color = gtk.gdk.Color(red=0x0, green=0x0, blue=0x0)
-        this_foreground = colormap.alloc_color(this_color)
-        gc = drawable.new_gc( foreground=this_foreground,
-                              background=this_foreground,
-                              line_width=2,
-                              line_style=gtk.gdk.LINE_SOLID,
-                              join_style=gtk.gdk.JOIN_MITER,
-                              cap_style=gtk.gdk.CAP_BUTT,
-                              fill=gtk.gdk.SOLID,
-                              function=gtk.gdk.COPY )
-#        drawable.set_size(self.x, self.x)
-        self.x += 50
-        r,g,b = 0,0,0
-        x,y = 0,0
-        while x < random.randint(100,200):
-            drawable.draw_point(gc, x, y)
-            x += 2
-            y += 1
-            r = random.randint(100,65535)
-            g = random.randint(100,65535)
-            b = random.randint(100,65535)
-            color = colormap.alloc_color(r, g, b)
-            gc.set_foreground(color)
+        filter = gtk.FileFilter()
+        filter.set_name("All files")
+        filter.add_pattern("*.*")
+        dialog.add_filter(filter)
+
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+            filename = dialog.get_filename()
+            self.image.save(filename)
+            self.draw_image()
+
+        dialog.destroy()
+        return True
 
         return True
 
     def open_file(self, widget):
         print "OPEN"
 
-        self.image = image.Image()
-        filename = ''
-        try:
-            filename = sys.argv[1]
-        except:
-            filename = 'img/test_me24.bmp'
+        dialog = gtk.FileChooserDialog("Open",
+                               None,
+                               gtk.FILE_CHOOSER_ACTION_OPEN,
+                               (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
+                                gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+        dialog.set_default_response(gtk.RESPONSE_OK)
 
-        self.image.open(filename)
-        self.draw_image()
+        filter = gtk.FileFilter()
+        filter.set_name("Images")
+        filter.add_mime_type("image/jpeg")
+        filter.add_mime_type("image/bmp")
+        filter.add_pattern("*.jpg")
+        filter.add_pattern("*.bmp")
+        dialog.add_filter(filter)
+
+        filter = gtk.FileFilter()
+        filter.set_name("All files")
+        filter.add_pattern("*.*")
+        dialog.add_filter(filter)
+
+        response = dialog.run()
+        if response == gtk.RESPONSE_OK:
+            filename = dialog.get_filename()
+            self.image.open(filename)
+            self.draw_image()
+
+        dialog.destroy()
         return True
 
     def expose_event(self, area, event):
         self.draw_image()
+        return True
+
+    def add_noise_r_cb(self, widget):
+        self.image.noise('r')
+        self.draw_image()
+        return True
+
+    def low_noise_r_cb(self, widget):
+        self.image.noise('r', strength=-1000)
+        self.draw_image()
+        return True
+
+    def add_noise_g_cb(self, widget):
+        self.image.noise('g')
+        self.draw_image()
+        return True
+
+    def low_noise_g_cb(self, widget):
+        self.image.noise('g', strength=-1000)
+        self.draw_image()
+        return True
+
+    def add_noise_b_cb(self, widget):
+        self.image.noise('b')
+        self.draw_image()
+        return True
+
+    def low_noise_b_cb(self, widget):
+        self.image.noise('b', strength=-1000)
+        self.draw_image()
+        return True
+
+    def negative_clicked_cb(self, widget):
+        self.image.negative()
+        self.draw_image()
+        return True
+
+    def put_filter_clicked_cb(self, widget):
+        self.image.put_filter()
+        self.draw_image()
+        return True
+
+    def hsl_clicked_cb(self, widget):
+        message = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO, gtk.BUTTONS_NONE, "H S L !")
+        message.add_button(gtk.STOCK_QUIT, gtk.RESPONSE_CLOSE)
+        resp = message.run()
+        if resp == gtk.RESPONSE_CLOSE:
+            message.destroy()
         return True
 
     def draw_image(self):
@@ -111,7 +174,6 @@ class MainWindow(gtk.Builder):
                 col = self.colormap.alloc_color(r, g, b)
                 self.gc.set_foreground(col)
                 self.drawable.draw_point(self.gc, x, y)
-
 
 if __name__ == '__main__':
     mainWindow = MainWindow()
