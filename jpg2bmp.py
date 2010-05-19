@@ -106,6 +106,7 @@ class MainWindow(gtk.Builder):
         if response == gtk.RESPONSE_OK:
             filename = dialog.get_filename()
             self.image.open(filename)
+            self.drawable.clear()
             self.draw_image()
 
         dialog.destroy()
