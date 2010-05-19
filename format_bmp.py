@@ -88,7 +88,7 @@ def get_bitmap_line(line, width, bpp, palette):
         for i in xrange(width):
             abgr = [ord(elem) << 8 for elem in list(line)[i*4:i*4+4]]
             abgr.reverse()
-            bitmap_line.append(abgr[:-1])
+            bitmap_line.append(abgr[1:])
     else:
         Exception("Wrong bbp")
     return bitmap_line
