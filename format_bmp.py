@@ -3,11 +3,11 @@
 
 import utils
 
-header_fields = [['file_size', 4], 
-                ['reserved', 4], 
-                ['bitmap_adress', 4], 
+header_fields = [['file_size', 4],
+                ['reserved', 4],
+                ['bitmap_adress', 4],
                 ['header_length', 4],
-                ['width', 4], 
+                ['width', 4],
                 ['height', 4],
                 ['color_plane', 2],
                 ['bits_on_pixel', 2],
@@ -33,7 +33,7 @@ def open_file(filepath):
         header[field[0]] = utils.filehex2dec(f.read(field[1]))
     for k,v in header.iteritems():
         print k, ':', v
-    print 
+    print
 
     # Palette
     has_palette = header['bits_on_pixel'] <= 8 and True or False
@@ -45,14 +45,14 @@ def open_file(filepath):
             b, g, r = [ord(elem) << 8 for elem in list(bgra)[:-1]]
             palette.append([r, g, b])
         print "\n".join(["%7d %7d %7d" % tuple(color) for color in palette])
-            
-    
+
+
     # Bitmap
     f.seek(header['bitmap_adress'])
-    
+
     line_size = get_bitmap_line_byte_size(header['width'], header['bits_on_pixel'])
     print "Line size = ",line_size
-    
+
     line = f.read(line_size)
     bitmap = []
     while (line):
@@ -81,12 +81,12 @@ def get_bitmap_line(line, width, bpp, palette):
             bitmap_line.append(pixel)
     elif bpp == 24:
         for i in xrange(width):
-            bgr = [ord(elem) << 8 for elem in list(line)[i*3:i*3+3]] 
+            bgr = [ord(elem) << 8 for elem in list(line)[i*3:i*3+3]]
             bgr.reverse()
             bitmap_line.append(bgr)
     elif bpp == 32:
         for i in xrange(width):
-            abgr = [ord(elem) << 8 for elem in list(line)[i*4:i*4+4]] 
+            abgr = [ord(elem) << 8 for elem in list(line)[i*4:i*4+4]]
             abgr.reverse()
             bitmap_line.append(abgr[:-1])
     else:
@@ -101,3 +101,4 @@ def save_file(filepath, content):
 if __name__=='__main__':
     h, b = open_file('img/test2.bmp')
     print b
+
