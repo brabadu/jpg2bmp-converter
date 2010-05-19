@@ -28,6 +28,13 @@ class Image ():
         self.height = metadata['height']
         self.width = metadata['width']
 
+    def save(self, filepath):
+        f = filepath.strip()
+
+        if not f.endswith('.bmp'):
+            f += '.bmp'
+        self.modules['bmp'].save_file(f, self.bitmap, self.height, self.width)
+
     def load_modules(self):
         """Dynamic load of modules, that handle image file types"""
         files = os.listdir(os.curdir)
