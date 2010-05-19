@@ -60,9 +60,9 @@ class Image ():
 
         for line in self.bitmap:
             for pixel in line:
-                np = (pixel[c] + strength) % 65536
+                np = (pixel[c] + strength)
 #                print pixel, " : ",
-                pixel[c] = np > 0 and np or 0
+                pixel[c] = max(0, min(65536, np))
 #                print pixel
 
     def negative(self):
