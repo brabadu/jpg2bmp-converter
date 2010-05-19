@@ -45,7 +45,7 @@ class Image ():
         modules_list = [[f.groups()[0], __import__(f.group()[:-3])] for f in format_files]
         self.modules = dict(modules_list)
 
-    def noise(self, component, strength=1000):
+    def noise(self, component, strength=10000):
         """Noise R,G or B component of image"""
         component = str(component).lower()
         all_components = {
@@ -62,7 +62,7 @@ class Image ():
             for pixel in line:
                 np = (pixel[c] + strength)
 #                print pixel, " : ",
-                pixel[c] = max(0, min(65536, np))
+                pixel[c] = max(1, min(65535, np))
 #                print pixel
 
     def negative(self):

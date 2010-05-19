@@ -121,7 +121,7 @@ class MainWindow(gtk.Builder):
         return True
 
     def low_noise_r_cb(self, widget):
-        self.image.noise('r', strength=-1000)
+        self.image.noise('r', strength=-10000)
         self.draw_image()
         return True
 
@@ -131,7 +131,7 @@ class MainWindow(gtk.Builder):
         return True
 
     def low_noise_g_cb(self, widget):
-        self.image.noise('g', strength=-1000)
+        self.image.noise('g', strength=-10000)
         self.draw_image()
         return True
 
@@ -141,7 +141,7 @@ class MainWindow(gtk.Builder):
         return True
 
     def low_noise_b_cb(self, widget):
-        self.image.noise('b', strength=-1000)
+        self.image.noise('b', strength=-10000)
         self.draw_image()
         return True
 
