@@ -116,32 +116,32 @@ class MainWindow(gtk.Builder):
         return True
 
     def add_noise_r_cb(self, widget):
-        self.image.noise('r')
+        self.image.noiseRGB('r')
         self.draw_image()
         return True
 
     def low_noise_r_cb(self, widget):
-        self.image.noise('r', strength=-10000)
+        self.image.noiseRGB('r', strength=-10000)
         self.draw_image()
         return True
 
     def add_noise_g_cb(self, widget):
-        self.image.noise('g')
+        self.image.noiseRGB('g')
         self.draw_image()
         return True
 
     def low_noise_g_cb(self, widget):
-        self.image.noise('g', strength=-10000)
+        self.image.noiseRGB('g', strength=-10000)
         self.draw_image()
         return True
 
     def add_noise_b_cb(self, widget):
-        self.image.noise('b')
+        self.image.noiseRGB('b')
         self.draw_image()
         return True
 
     def low_noise_b_cb(self, widget):
-        self.image.noise('b', strength=-10000)
+        self.image.noiseRGB('b', strength=-10000)
         self.draw_image()
         return True
 
