@@ -58,6 +58,95 @@ class Image ():
                 pixel[c] = max(1, min(65535, np))
 #                print pixel
 
+    def noiseHSL(self, strength = 0.3):
+        bitmap_hsl = self.convert2HSL()
+        for line in bitmap_hsl:
+            for pixel in line:
+                np = pixel[2] + strength
+                pixel[2] = min(1, max(0, np))
+        self.bitmap = self.convert2BMP(bitmap_hsl)
+
+    def convert2HSL(self):
+        bitmap = []
+        for line in self.bitmap:
+            bitmap.append([])
+            for pixel in line:
+                r = (pixel[0] / float(65535))
+                g = (pixel[1] / float(65535))
+                b = (pixel[2] / float(65535))
+
+                minim = min(r, g, b)
+                maxim = max(r, g, b)
+                delta = maxim - minim
+
+                L =  (maxim + minim) / 2
+
+                if delta == 0: #This is a gray, no chroma...
+                    H = 0 #HSL results from 0 to 1
+                    S = 0
+                else: #Chromatic data...
+                    if L < 0.5:
+                        S = delta / (maxim + minim)
+                    else:
+                        S = delta / (2 - maxim - minim)
+
+                    delta_r = (((maxim - r) / 6) + (delta / 2)) / delta
+                    delta_g = (((maxim - g) / 6) + (delta / 2)) / delta
+                    delta_b = (((maxim - b) / 6) + (delta / 2)) / delta
+
+                    if r == maxim:
+                        H = delta_b - delta_g
+                    elif g == maxim:
+                        H = (1 / 3) + delta_r - delta_b
+                    else:
+                        H = (2 / 3) + delta_g - delta_r
+
+                    if H < 0:
+                        H += 1
+                    if H > 1:
+                        H -= 1
+                bitmap[-1].append([H, S, L])
+        return bitmap
+
+    def convert2BMP(self, bitmap_hsl):
+        def hue2RGB(v1, v2, vH):
+           if vH < 0:
+               vH += 1
+           if vH > 1:
+               vH -= 1
+           if (6 * vH) < 1:
+               return (v1 + (v2 - v1) * 6 * vH)
+           if (2 * vH) < 1:
+               return (v2)
+           if (3 * vH) < 2:
+               return (v1 + (v2 - v1) * ((2 / 3) - vH) * 6)
+           return (v1)
+
+        bitmap = []
+        for line in bitmap_hsl:
+            bitmap.append([])
+            for pixel in line:
+                H, S, L = pixel
+                if S == 0: #HSL from 0 to 1
+                   R = L * 65535 #RGB results from 0 to 255
+                   G = L * 65535
+                   B = L * 65535
+                else:
+                   if (L < 0.5):
+                       var_2 = L * (1 + S)
+                   else:
+                       var_2 = (L + S) - (S * L)
+
+                   var_1 = 2 * L - var_2
+
+                   R = 255 * hue2RGB(var_1, var_2, H + (1 / 3))
+                   G = 255 * hue2RGB(var_1, var_2, H)
+                   B = 255 * hue2RGB(var_1, var_2, H - (1 / 3))
+                bitmap[-1].append([R, G, B])
+        return bitmap
+
+
+
     def negative(self):
         self.bitmap = [[[65536 - component for component in pixel] for pixel in line] for line in self.bitmap]
 
