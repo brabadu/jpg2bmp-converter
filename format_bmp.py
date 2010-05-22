@@ -189,7 +189,16 @@ def save_file(filepath, content, bpp):
         for line in content:
             bitmap_line = []
             for pixel in line:
-                bitmap_line.append(chr(get_palette_pos(palette, pixel)))
+                i = 0
+                while (i < 256) and \
+                ((abs(pixel[0] - palette[i][0]) >= 8192) or \
+                (abs(pixel[1] - palette[i][1]) >= 8192) or \
+                (abs(pixel[2] - palette[i][2]) >= 8192)):
+                    i +=1
+                if i < 256:
+                    bitmap_line.append(chr(i))
+                else:
+                    bitmap_line.append(chr(get_palette_pos(palette, pixel)))
             f.write("".join(bitmap_line))
     else:
         f.close()
@@ -223,5 +232,5 @@ def get_palette_pos(palette, pixel):
 # Test
 if __name__=='__main__':
     h, b = open_file('img/test_me24.bmp')
-    save_file('img/result.bmp', b, 24)
+    save_file('img/result.bmp', b, 8)
 
