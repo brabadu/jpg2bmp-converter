@@ -81,6 +81,7 @@ def get_bitmap_line(line, width, bpp, palette):
         for i in xrange(width):
             pixel = palette[utils.testBit(integer, i)]
             bitmap_line.append(pixel)
+        bitmap_line.reverse()
     elif bpp == 24:
         for i in xrange(width):
             bgr = [ord(elem) << 8 for elem in list(line)[i*3:i*3+3]]
