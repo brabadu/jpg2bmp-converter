@@ -173,3 +173,8 @@ class Image ():
                 b[i][j] = [center[k] / self.filter_sum for k in xrange(3)]
         self.bitmap = b
 
+if __name__ == '__main__':
+    im = Image()
+    im.open('img/test_me24.bmp')
+    im.noiseHSL()
+
