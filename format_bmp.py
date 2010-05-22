@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding:UTF-8 -*-
 
+import operator
+
 import utils
 
 header_fields = [['file_size', 4],
@@ -132,7 +134,15 @@ def save_file(filepath, content, bpp):
     write(0, 4)
     write(0, 4)
 
-    # TODO: PALETTE MUST BE HERE
+    #palette
+    palette = []
+    if bpp == 1:
+        palette = [[0, 0, 0], [65280, 65280, 65280]]
+    for p in palette:
+        output_p = [component >> 8 for component in p]
+        output_p.reverse()
+        output_p = map(chr, output_p)
+        f.write("".join(output_p) + '\x00')
 
     # bitmap
     bitmap_adress = f.tell()
@@ -148,6 +158,18 @@ def save_file(filepath, content, bpp):
                 pixel.reverse()
             while len(bitmap_line) < line_size:
                 bitmap_line.append('\x00')
+            f.write("".join(bitmap_line))
+    elif bpp == 1:
+        for line in content:
+            binary_line = ""
+            for pixel in line:
+                binary_line += str(get_palette_pos(palette, pixel))
+            while len(binary_line) < line_size*8:
+                binary_line += '0'
+
+            bitmap_line = [binary_line[i*8:(i+1)*8] for i in xrange(line_size)]
+            bitmap_line = [int(byte, 2)  for byte in bitmap_line if byte]
+            bitmap_line = map(chr, bitmap_line)
             f.write("".join(bitmap_line))
 
     file_size = f.tell()
@@ -167,6 +189,13 @@ def save_file(filepath, content, bpp):
 
     f.close()
     return True
+
+def get_palette_pos(palette, pixel):
+    eps = []
+    for p in palette:
+        eps.append(reduce(operator.add, [abs(p[i]-pixel[0]) for i in xrange(3)]))
+    return eps.index(min(eps))
+
 
 # Test
 if __name__=='__main__':
