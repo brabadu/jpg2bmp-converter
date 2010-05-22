@@ -117,32 +117,42 @@ class MainWindow(gtk.Builder):
         return True
 
     def add_noise_r_cb(self, widget):
-        self.image.noise('r')
+        self.image.noiseRGB('r')
         self.draw_image()
         return True
 
     def low_noise_r_cb(self, widget):
-        self.image.noise('r', strength=-1000)
+        self.image.noiseRGB('r', strength=-10000)
         self.draw_image()
         return True
 
     def add_noise_g_cb(self, widget):
-        self.image.noise('g')
+        self.image.noiseRGB('g')
         self.draw_image()
         return True
 
     def low_noise_g_cb(self, widget):
-        self.image.noise('g', strength=-1000)
+        self.image.noiseRGB('g', strength=-10000)
         self.draw_image()
         return True
 
     def add_noise_b_cb(self, widget):
-        self.image.noise('b')
+        self.image.noiseRGB('b')
         self.draw_image()
         return True
 
     def low_noise_b_cb(self, widget):
-        self.image.noise('b', strength=-1000)
+        self.image.noiseRGB('b', strength=-10000)
+        self.draw_image()
+        return True
+
+    def add_noise_l_cb(self, widget):
+        self.image.noiseHSL()
+        self.draw_image()
+        return True
+
+    def low_noise_l_cb(self, widget):
+        self.image.noiseHSL(strength=-0.1)
         self.draw_image()
         return True
 
@@ -151,8 +161,23 @@ class MainWindow(gtk.Builder):
         self.draw_image()
         return True
 
-    def put_filter_clicked_cb(self, widget):
-        self.image.put_filter()
+    def put_filter8_clicked_cb(self, widget):
+        f = [
+            [1, 2, 1],
+            [2, 13, 2],
+            [2, 2, 1]
+        ]
+        self.image.put_filter(f)
+        self.draw_image()
+        return True
+
+    def put_filter11_clicked_cb(self, widget):
+        f = [
+            [2, 7, 1],
+            [2, 7, 2],
+            [7, 3, 1]
+        ]
+        self.image.put_filter(f)
         self.draw_image()
         return True
 
