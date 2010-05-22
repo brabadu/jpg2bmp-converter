@@ -144,6 +144,14 @@ def save_file(filepath, content, bpp):
     palette = []
     if bpp == 1:
         palette = [[0, 0, 0], [65280, 65280, 65280]]
+    elif bpp == 8:
+        import palette256
+        palette = palette256.palette
+        for p in palette:
+            p.reverse()
+    else:
+        pass
+
     for p in palette:
         output_p = [component >> 8 for component in p]
         output_p.reverse()
@@ -177,6 +185,15 @@ def save_file(filepath, content, bpp):
             bitmap_line = [int(byte, 2)  for byte in bitmap_line if byte]
             bitmap_line = map(chr, bitmap_line)
             f.write("".join(bitmap_line))
+    elif bpp == 8:
+        for line in content:
+            bitmap_line = []
+            for pixel in line:
+                bitmap_line.append(chr(get_palette_pos(palette, pixel)))
+            f.write("".join(bitmap_line))
+    else:
+        f.close()
+        raise Exception("Reading of %d bbp images wasn't implemented" % bpp)
 
     file_size = f.tell()
     bitmap_length = file_size - bitmap_adress
