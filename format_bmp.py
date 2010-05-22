@@ -93,12 +93,83 @@ def get_bitmap_line(line, width, bpp, palette):
         Exception("Wrong bbp")
     return bitmap_line
 
-def save_file(filepath, content):
-    print "BMP",filepath
+def save_file(filepath, content, bpp):
+    print "Saving \"%s\" as BMP" % filepath
+    f = open(filepath, 'wb')
+    f.write('BM')
+
+    #skiping fields file_size and bitmap_adress, because don't know them now. Will write later
+    f.seek(14)
+
+    #header length
+    write = lambda data, size: f.write(utils.dec2filehex(data,size))
+
+    write(40, 4)
+
+    #image height and width
+    width = len(content[0])
+    height = len(content)
+    write(width, 4)
+    write(height, 4)
+
+    #color_plane
+    write(1, 2)
+
+    #bbp
+    write(int(bpp), 2)
+
+    #compression
+    write(0, 4)
+
+    #skiping bitmap length, will write later
+    f.seek(38)
+
+    # horizontal and vertical resolution
+    write(2835, 4)
+    write(2835, 4)
+
+    # color_number and base_color_number
+    write(0, 4)
+    write(0, 4)
+
+    # TODO: PALETTE MUST BE HERE
+
+    # bitmap
+    bitmap_adress = f.tell()
+    content.reverse()
+
+    line_size = get_bitmap_line_byte_size(width, bpp)
+    if bpp == 24:
+        for line in content:
+            bitmap_line = []
+            for pixel in line:
+                pixel.reverse()
+                bitmap_line += [chr(c >> 8) for c in pixel]
+                pixel.reverse()
+            while len(bitmap_line) < line_size:
+                bitmap_line.append('\x00')
+            f.write("".join(bitmap_line))
+
+    file_size = f.tell()
+    bitmap_length = file_size - bitmap_adress
+
+    # file size
+    f.seek(2)
+    write(file_size, 4)
+
+    # bitmap adress (where it starts)
+    f.seek(10)
+    write(bitmap_adress, 4)
+
+    # bitmap length
+    f.seek(34)
+    write(bitmap_length, 4)
+
+    f.close()
     return True
 
 # Test
 if __name__=='__main__':
-    h, b = open_file('img/test2.bmp')
-    print b
+    h, b = open_file('img/test_me24.bmp')
+    save_file('img/result.bmp', b, 24)
 
