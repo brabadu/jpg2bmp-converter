@@ -145,6 +145,16 @@ class MainWindow(gtk.Builder):
         self.draw_image()
         return True
 
+    def add_noise_l_cb(self, widget):
+        self.image.noiseHSL()
+        self.draw_image()
+        return True
+
+    def low_noise_l_cb(self, widget):
+        self.image.noiseHSL(strength=-0.1)
+        self.draw_image()
+        return True
+
     def negative_clicked_cb(self, widget):
         self.image.negative()
         self.draw_image()
