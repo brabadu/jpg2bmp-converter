@@ -220,6 +220,7 @@ def save_file(filepath, content, bpp):
     write(bitmap_length, 4)
 
     f.close()
+    content.reverse()
     return True
 
 def get_palette_pos(palette, pixel):
