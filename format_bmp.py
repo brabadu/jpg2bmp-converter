@@ -168,7 +168,7 @@ def save_file(filepath, content, bpp):
             bitmap_line = []
             for pixel in line:
                 pixel.reverse()
-                bitmap_line += [chr(c >> 8) for c in pixel]
+                bitmap_line += [chr(min(c >> 8, 255)) for c in pixel]
                 pixel.reverse()
             while len(bitmap_line) < line_size:
                 bitmap_line.append('\x00')
