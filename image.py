@@ -146,7 +146,7 @@ class Image ():
         return bitmap
 
     def negative(self):
-        self.bitmap = [[[65536 - component for component in pixel] for pixel in line] for line in self.bitmap]
+        self.bitmap = [[[65535 - component for component in pixel] for pixel in line] for line in self.bitmap]
 
     def put_filter(self, f):
         def multiply(x, y):
