@@ -2,6 +2,7 @@
 # -*- coding:UTF-8 -*-
 
 import gtk
+import gobject
 import os
 import random
 import sys
@@ -47,6 +48,40 @@ class MainWindow(gtk.Builder):
         print "QUIT"
         gtk.main_quit()
 
+    def select_bpp(self):
+        #base this on a message dialog
+        dialog = gtk.MessageDialog(
+            None,
+            gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+            gtk.MESSAGE_QUESTION,
+            gtk.BUTTONS_OK,
+            None)
+
+        variants = [
+            ["2 colors", "256 colors", "24 bits on pixel"],
+            [1, 8, 24]
+        ]
+
+        dialog.set_markup('Please choose color depth:')
+
+        #create the combo box field
+        combo = gtk.combo_box_new_text()
+        for var in variants[0]:
+            combo.append_text(var)
+        combo.set_active(2)
+
+        hbox = gtk.HBox()
+        hbox.pack_start(gtk.Label("Depth:"), False, 5, 5)
+        hbox.pack_end(combo)
+        dialog.vbox.pack_end(hbox, True, True, 0)
+        dialog.show_all()
+        #go go go
+        dialog.run()
+        result = variants[1][combo.get_active()]
+        dialog.destroy()
+        return result
+
+
 
     def save_file(self, widget):
         print "SAVE"
@@ -54,7 +89,7 @@ class MainWindow(gtk.Builder):
                                None,
                                gtk.FILE_CHOOSER_ACTION_SAVE,
                                (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL,
-                                gtk.STOCK_OPEN, gtk.RESPONSE_OK))
+                                gtk.STOCK_SAVE, gtk.RESPONSE_OK))
         dialog.set_default_response(gtk.RESPONSE_OK)
 
         filter = gtk.FileFilter()
@@ -69,14 +104,13 @@ class MainWindow(gtk.Builder):
         dialog.add_filter(filter)
 
         response = dialog.run()
+        bpp = self.select_bpp()
         if response == gtk.RESPONSE_OK:
             filename = dialog.get_filename()
-            self.image.save(filename)
+            self.image.save(filename, bpp)
             self.draw_image()
 
         dialog.destroy()
-        return True
-
         return True
 
     def open_file(self, widget):
