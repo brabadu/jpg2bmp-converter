@@ -1,6 +1,11 @@
 #!/usr/bin/python
 # -*- coding:UTF-8 -*-
 
+###################
+#
+# format_bmp.py
+#
+###################
 import operator
 
 import utils

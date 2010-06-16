@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding:UTF-8 -*-
 
+###################
+#
+# jpg2bmp.py
+#
+###################
+
+
 import gtk
 import gobject
 import os

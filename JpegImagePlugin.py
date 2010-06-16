@@ -18,6 +18,14 @@
 # See the README file for information on usage and redistribution.
 #
 
+###################
+#
+# JpegImagePlugin.py
+#
+###################
+
+
+
 import format_jpg
 import traceback, string, os
 import array, struct
@@ -145,6 +153,8 @@ def APP(self, marker):
             pass
         else:
             self.info["adobe_transform"] = adobe_transform
+    for k,v in self.info.iteritems():
+        print "\t", k,':',v
 
 def COM(self, marker):
     #
@@ -167,6 +177,7 @@ def SOF(self, marker):
     n = i16(self.fp.read(2))-2
     s = _safe_read(self.fp, n)
     self.size = i16(s[3:]), i16(s[1:])
+    print "\t Size:", self.size
 
     self.bits = ord(s[0])
     if self.bits != 8:
@@ -181,6 +192,7 @@ def SOF(self, marker):
         self.mode = "CMYK"
     else:
         raise SyntaxError("cannot handle %d-layer images" % self.layers)
+    print "\t Mode:", self.mode
 
     if marker in [0xFFC2, 0xFFC6, 0xFFCA, 0xFFCE]:
         self.info["progressive"] = self.info["progression"] = 1
@@ -220,6 +232,7 @@ def DQT(self, marker):
         v = ord(s[0])
         if v/16 == 0:
             self.quantization[v&15] = array.array("b", s[1:65])
+            print "\t", self.quantization[v&15]
             s = s[65:]
         else:
             return # FIXME: add code to read 16-bit tables!
@@ -360,7 +373,7 @@ class JpegImageFile(format_jpg.Image):
 
             if MARKER.has_key(i):
                 name, description, handler = MARKER[i]
-                # print hex(i), name, description
+                print hex(i), name, description
                 if handler is not None:
                     handler(self, i)
                 if i == 0xFFDA: # start of scan

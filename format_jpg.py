@@ -1,3 +1,11 @@
+
+###################
+#
+# format_jpg.py
+#
+###################
+
+
 # palettes/quantizers
 WEB = 0
 ADAPTIVE = 1
@@ -138,10 +146,12 @@ def open(filepath, mode="r"):
 
 def open_file(filepath):
     "Open an image file, without loading the raster data"
-
-    im = open(filepath)
-    p = im.load()
-    bitmap = [[[ elem << 8 for elem in p[x,y]] for x in xrange(im.size[0])]for y in xrange(im.size[1])]
+    import jpeg_opener
+    bitmap = jpeg_opener.loadJpeg(filepath)
+    if not bitmap:
+        im = open(filepath)
+        p = im.load()
+        bitmap = [[[ elem << 8 for elem in p[x,y]] for x in xrange(im.size[0])]for y in xrange(im.size[1])]
     header = {
         'width' : im.size[0],
         'height' : im.size[1]

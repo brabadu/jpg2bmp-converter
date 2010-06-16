@@ -1,11 +1,19 @@
 #!/usr/bin/python
 # -*- coding:UTF-8 -*-
 
+###################
+#
+# image.py
+#
+###################
+
+
 import sys
 import re
 import os
 import random
 import operator
+import time
 
 from utils import InvalidImage, UnknownImageFormat
 
@@ -23,7 +31,9 @@ class Image ():
         filetype = filepath.split('.')[-1]
 
         try:
+            print time.strftime('%d.%m.%y %H:%M:%S >>> Opening started', time.gmtime(time.time()))
             metadata, self.bitmap = self.modules[filetype].open_file(f)
+            print time.strftime('%d.%m.%y %H:%M:%S >>> Finished opening', time.gmtime(time.time()))
         except KeyError:
             raise UnknownImageFormat
 

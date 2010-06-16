@@ -1,6 +1,13 @@
 #!/usr/bin/python
 # -*- coding:UTF-8 -*-
 
+###################
+#
+# utils.py
+#
+###################
+
+
 class InvalidImage(Exception):
     pass
 
